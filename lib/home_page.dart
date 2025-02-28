@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-// import 'bussiness.dart';
 import 'controller/category_controller.dart';
 
 class HomePage extends GetView<CategoryController>{
