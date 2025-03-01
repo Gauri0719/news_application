@@ -79,7 +79,6 @@ final List<String> categories = ['General','Business','Technology','Sports','Ent
           ],
         ),
       ),
-      // body: Center(child: Text('Swipe from left or tap the menu icon')),
       body: Column(
           children: [
           SizedBox(height: 10),

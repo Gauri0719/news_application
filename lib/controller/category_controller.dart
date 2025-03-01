@@ -1,10 +1,28 @@
 import 'package:get/get.dart';
+import 'package:news_application/model/news_model.dart';
+import 'package:news_application/services/news_services.dart';
 
-class CategoryController extends GetxController{
-  var selectedCategory = 'General'.obs;
-  var categoryList=[].obs;
+class NewsController extends GetxController{
+  var newsList = <NewsModel>[].obs;
+  var isLoading = false.obs;
+  var selectedCategory='general'.obs;
 
-  void selectCategory(String category){
-    selectedCategory.value = category;
+  @override
+  void onInit(){
+    fetchNews(selectedCategory.value);
+    super.onInit();
+  }
+
+  Future<void> fetchNews(String category) async {
+    try{
+      isLoading(true);
+      selectedCategory.value=category;
+      var news = await NewsService.fetchNews(category);
+      newsList.assignAll(news);
+    }catch(e){
+      print("Error:$e");
+    }finally{
+      isLoading(false);
+    }
   }
 }
