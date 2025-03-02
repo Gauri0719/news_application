@@ -5,7 +5,7 @@ import 'package:news_application/model/news_model.dart';
 
 class NewsService {
   static const String _baseUrl = "https://gnews.io/api/v4";
-  static const String _apiKey = "YOUR_API_KEY"; // Replace with your key
+  static const String _apiKey = "f8b8f3716b1dc9e9638f4f7f1bca765b"; // Replace with your key
 
   static Future<List<NewsModel>> fetchNews(String category) async {
     final String url = '$_baseUrl/top-headlines?category=$category&lang=en&apikey=$_apiKey';

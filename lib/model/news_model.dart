@@ -17,7 +17,7 @@ class NewsModel {
   ///THIS CONVERT JSON INTO DART
   factory NewsModel.fromJson(Map<String, dynamic> json) {
     return NewsModel(
-      title: json['title'] ?? '',
+      title: json['title'] ?? 'No title',
       description: json['description'] ?? '',
       url: json['url'] ?? '',
       image: json['image'] ?? '',

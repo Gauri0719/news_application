@@ -9,11 +9,11 @@ class NewsController extends GetxController{
 
   @override
   void onInit(){
-    fetchNews(selectedCategory.value);
+    fetchNewsByCategory(selectedCategory.value);
     super.onInit();
   }
 
-  Future<void> fetchNews(String category) async {
+  Future<void> fetchNewsByCategory(String category) async {
     try{
       isLoading(true);
       selectedCategory.value=category;
