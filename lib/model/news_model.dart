@@ -5,6 +5,7 @@ class NewsModel {
   String image;
   String source;
   String publishedAt;
+  final int? id;
 
   NewsModel({
     required this.title,
@@ -13,7 +14,21 @@ class NewsModel {
     required this.image,
     required this.source,
     required this.publishedAt,
+    this.id
   });
+
+  // Convert object to Map for database insertion
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'description': description,
+      'url': url,
+      'image': image,
+      'source': source,
+      'publishedAt': publishedAt,
+      'id': id,
+    };
+  }
   ///THIS CONVERT JSON INTO DART
   factory NewsModel.fromJson(Map<String, dynamic> json) {
     return NewsModel(
@@ -23,6 +38,7 @@ class NewsModel {
       image: json['image'] ?? '',
       source: json['source']['name'] ?? '',
       publishedAt: json['publishedAt'] ?? '',
+      id: json['id'],
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_application/model/news_model.dart';
 import 'package:news_application/news_detail_page.dart';
+import 'package:news_application/reading_history_page.dart';
 
 import 'controller/category_controller.dart';
 
@@ -114,7 +115,7 @@ Widget _buildDrawer(BuildContext context) {
           Get.back();
         }),
         _drawerItem(Icons.history, "Reading History", () {
-
+          Get.to(() => ReadingHistoryPage());
         }),
         Divider(),
         ListTile(
