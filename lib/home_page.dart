@@ -42,34 +42,34 @@ class HomePage extends StatelessWidget {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Obx(() =>Row(
-                      children: categories.map((category) {
-                        bool isSelected = newsController.selectedCategory.value ==category.toLowerCase();
+                  children: categories.map((category) {
+                    bool isSelected = newsController.selectedCategory.value ==category.toLowerCase();
 
-                        return GestureDetector(
-                          onTap: ()=>newsController.fetchNewsByCategory(category.toLowerCase()),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: isSelected ? Colors.purple : Colors.grey[300],
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                if (isSelected) // ✅ Show icon only if selected
-                                  Icon(Icons.check_circle, color: Colors.white, size: 18),
-                                if (isSelected) SizedBox(width: 5),
-                                SizedBox(width: 5,),
-                                Text(category,style: TextStyle(
-                                    color: isSelected ? Colors.white : Colors.black,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                ),)
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                  ),
+                    return GestureDetector(
+                      onTap: ()=>newsController.fetchNewsByCategory(category.toLowerCase()),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.purple : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            if (isSelected) // ✅ Show icon only if selected
+                              Icon(Icons.check_circle, color: Colors.white, size: 18),
+                            if (isSelected) SizedBox(width: 5),
+                            SizedBox(width: 5,),
+                            Text(category,style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.black,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            ),)
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
                 ),
               ),
               // NEWS LIST
@@ -115,7 +115,7 @@ Widget _buildDrawer(BuildContext context) {
           Get.back();
         }),
         _drawerItem(Icons.history, "Reading History", () {
-          Get.to(() => ReadingHistoryPage());
+          // Get.to(() => ReadingHistoryPage());
         }),
         Divider(),
         ListTile(
@@ -200,8 +200,8 @@ class NewsCard extends StatelessWidget {
         margin: EdgeInsets.all(10),
         child: Column(
             children: [
-              news.image != null
-                  ? Image.network(news.image!, fit: BoxFit.cover,
+              news.imageUrl != null
+                  ? Image.network(news.imageUrl, fit: BoxFit.cover,
                 width: double.infinity,
                 height: 200,)
                   : Container(height: 200, color: Colors.grey,),

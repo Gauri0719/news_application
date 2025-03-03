@@ -2,43 +2,30 @@ class NewsModel {
   String title;
   String description;
   String url;
-  String image;
+  String imageUrl;
   String source;
   String publishedAt;
-  final int? id;
+  final String content;
 
   NewsModel({
     required this.title,
     required this.description,
     required this.url,
-    required this.image,
+    required this.imageUrl,
     required this.source,
     required this.publishedAt,
-    this.id
+    required this.content
   });
 
-  // Convert object to Map for database insertion
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'url': url,
-      'image': image,
-      'source': source,
-      'publishedAt': publishedAt,
-      'id': id,
-    };
-  }
-  ///THIS CONVERT JSON INTO DART
   factory NewsModel.fromJson(Map<String, dynamic> json) {
     return NewsModel(
       title: json['title'] ?? 'No title',
       description: json['description'] ?? '',
       url: json['url'] ?? '',
-      image: json['image'] ?? '',
+      imageUrl: json['image'] ?? '',
       source: json['source']['name'] ?? '',
       publishedAt: json['publishedAt'] ?? '',
-      id: json['id'],
+      content: json['content'] ?? json['description'] ?? 'No Content Available',
     );
   }
 }
