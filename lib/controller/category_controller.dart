@@ -1,3 +1,4 @@
+
 import 'package:get/get.dart';
 import 'package:news_application/model/news_model.dart';
 // import '../model/news_model.dart';
@@ -23,21 +24,21 @@ class NewsController extends GetxController {
     }
   }
 
-  // Fetch news by search query
-  // Future<void> fetchNewsSearch(String query) async {
-  //   try {
-  //     isLoading(true);
-  //     var news = await NewsService.searchNews(query);
-  //     searchResults.assignAll(news);
-  //   } catch (e) {
-  //     print("Error: $e");
-  //   } finally {
-  //     isLoading(false);
-  //   }
-  // }
-  //
-  // // Clear search results
-  // void clearSearchResults() {
-  //   searchResults.clear();
-  // }
+// Fetch news by search query
+// Future<void> fetchNewsSearch(String query) async {
+//   try {
+//     isLoading(true);
+//     var news = await NewsService.searchNews(query);
+//     searchResults.assignAll(news);
+//   } catch (e) {
+//     print("Error: $e");
+//   } finally {
+//     isLoading(false);
+//   }
+// }
+//
+// // Clear search results
+// void clearSearchResults() {
+//   searchResults.clear();
+// }
 }

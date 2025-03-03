@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_application/services/database_class.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:news_application/model/news_model.dart'; // Import the model
 
 class NewsDetailPage extends StatelessWidget {
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
+
+
   @override
   Widget build(BuildContext context) {
     final NewsModel news = Get.arguments as NewsModel; // Cast to NewsModel
-
+    // Insert news into database
+    _saveNewsToDatabase(news);
     // Function to open the news URL in the browser
     void _launchURL(String url) async {
       try {
@@ -96,5 +101,10 @@ class NewsDetailPage extends StatelessWidget {
         ),
       ),
     );
+  }
+  // Save the news to the database
+  void _saveNewsToDatabase(NewsModel news) async {
+    await _dbHelper.insertNews(news);
+    print("News saved to database: ${news.title}");
   }
 }

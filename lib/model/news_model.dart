@@ -1,3 +1,4 @@
+
 class NewsModel {
   String title;
   String description;

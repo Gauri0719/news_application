@@ -11,7 +11,7 @@ import 'package:news_application/reading_history_page.dart';
 import 'controller/category_controller.dart';
 
 class HomePage extends StatelessWidget {
-   final NewsController newsController = Get.put(NewsController());
+  final NewsController newsController = Get.put(NewsController());
 
   final ThemeController themeController = Get.find();
   //  final NewsSearchController searchController =  Get.put(NewsSearchController());
@@ -31,15 +31,15 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("News App"),
-          backgroundColor: themeController.isDarkMode.value ? Colors.black : Colors.blue,
-          actions: [
-            IconButton(
-            onPressed: () {
-              Get.to(() => SearchPage());
-            },
-        icon: Icon(Icons.search)),
-    ]
+            title: Text("News App"),
+            backgroundColor: themeController.isDarkMode.value ? Colors.black : Colors.blue,
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    // Get.to(() => SearchPage());
+                  },
+                  icon: Icon(Icons.search)),
+            ]
         ),
         drawer: _buildDrawer(context),
         body: Column(

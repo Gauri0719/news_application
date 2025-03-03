@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_application/controller/search_controller.dart';
+// import 'package:news_application/controller/search_controller.dart';
 import 'package:news_application/home_page.dart';
+import 'package:news_application/controller/search_controller.dart' as custom;
+
 import 'package:news_application/controller/theme_controller.dart';
 
 void main() {
-  Get.put(ThemeController()); // Initialize Theme Controller
+  Get.put(ThemeController());
+  // Get.put(custom.SearchController()); // Initialize Theme Controller
   runApp(MyApp());
 }
 
