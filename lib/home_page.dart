@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_application/controller/search_controller.dart';
 import 'package:news_application/controller/theme_controller.dart';
 import 'package:news_application/model/news_model.dart';
+// import 'package:news_application/model/news_model.dart';
+// import '../controllers/search_controller.dart';
 import 'package:news_application/news_detail_page.dart';
 import 'package:news_application/reading_history_page.dart';
 
 import 'controller/category_controller.dart';
 
 class HomePage extends StatelessWidget {
-  final NewsController newsController = Get.put(NewsController());
+   final NewsController newsController = Get.put(NewsController());
+
   final ThemeController themeController = Get.find();
-  final TextEditingController searchController = TextEditingController();
+  //  final NewsSearchController searchController =  Get.put(NewsSearchController());
+  // final TextEditingController searchTextController = TextEditingController();
 
   // HomePage({super.key});
   final List<String> categories = [
@@ -30,12 +35,11 @@ class HomePage extends StatelessWidget {
           backgroundColor: themeController.isDarkMode.value ? Colors.black : Colors.blue,
           actions: [
             IconButton(
-                onPressed: () {
-                  showSearch(context: context,
-                      delegate: NewsSearchDelegate(newsController));
-                },
-                icon: Icon(Icons.search))
-          ],
+            onPressed: () {
+              Get.to(() => SearchPage());
+            },
+        icon: Icon(Icons.search)),
+    ]
         ),
         drawer: _buildDrawer(context),
         body: Column(
@@ -89,8 +93,8 @@ class HomePage extends StatelessWidget {
             ])
     );
   }
-
 }
+
 // DRAWER MENU
 Widget _buildDrawer(BuildContext context) {
   final ThemeController themeController = Get.find();
@@ -125,7 +129,7 @@ Widget _buildDrawer(BuildContext context) {
           Get.back();
         }),
         _drawerItem(Icons.history, "Reading History", () {
-          // Get.to(() => ReadingHistoryPage());
+          Get.to(() => ReadingHistoryPage());
         }),
         Divider(),
         Obx(() => ListTile(
@@ -155,40 +159,95 @@ Widget _drawerItem(IconData icon, String title, VoidCallback onTap) {
   );
 }
 // SEARCH DELEGATE FOR SEARCHING NEWS
-class NewsSearchDelegate extends SearchDelegate {
-  final NewsController newsController;
+// class NewsSearchDelegate extends SearchDelegate {
+//   final NewsController newsController;
+//   NewsSearchDelegate(this.newsController);
+//
+//   @override
+//   List<Widget>? buildActions(BuildContext context) {
+//     return [
+//       IconButton(
+//         icon: Icon(Icons.clear),
+//         onPressed: () {
+//           query = "";
+//           newsController.searchResults.clear(); // ✅ Clears results instead of calling API again
+//         },
+//       ),
+//     ];
+//   }
+//
+//   @override
+//   Widget buildLeading(BuildContext context) {
+//     return IconButton(
+//       icon: Icon(Icons.arrow_back),
+//       onPressed: () => close(context, null),
+//     );
+//   }
+//
+//   @override
+//   Widget buildResults(BuildContext context) {
+//     if (query.isEmpty) {
+//       return Center(child: Text("Start typing to search"));
+//     }
+//
+//     newsController.fetchNewsSearch(query); // ✅ Fetch results once
+//
+//     return GetBuilder<NewsController>( // ✅ GetBuilder ensures UI updates properly
+//       builder: (controller) {
+//         if (controller.isLoading.value) {
+//           return Center(child: CircularProgressIndicator());
+//         }
+//         if (controller.searchResults.isEmpty) {
+//           return Center(child: Text("❌ No results found"));
+//         }
+//
+//         return ListView.builder(
+//           itemCount: controller.searchResults.length,
+//           itemBuilder: (context, index) {
+//             final news = controller.searchResults[index];
+//             return NewsCard(news: news);
+//           },
+//         );
+//       },
+//     );
+//   }
+//
+//   @override
+//   Widget buildSuggestions(BuildContext context) {
+//     if (query.isEmpty) return Center(child: Text("Start typing to search"));
+//
+//     newsController.fetchNewsSearch(query); // ✅ Fetch results dynamically
+//
+//     return GetBuilder<NewsController>(
+//       builder: (controller) {
+//         if (controller.isLoading.value) {
+//           return Center(child: CircularProgressIndicator());
+//         }
+//         if (controller.searchResults.isEmpty) {
+//           return Center(child: Text("No suggestions found"));
+//         }
+//
+//         return ListView.builder(
+//           itemCount: controller.searchResults.length,
+//           itemBuilder: (context, index) {
+//             final news = controller.searchResults[index];
+//             return ListTile(
+//               title: Text(news.title ?? "No Title"),
+//               subtitle: Text(news.source ?? "Unknown Source"),
+//               onTap: () {
+//                 query = news.title!;
+//                 showResults(context);
+//               },
+//             );
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 
-  NewsSearchDelegate(this.newsController);
 
 
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(icon: Icon(Icons.clear), onPressed: () => query = ""),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-        icon: Icon(Icons.arrow_back), onPressed: () => close(context, null));
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    final results = newsController.newsList.where((news) =>
-        news.title.toLowerCase().contains(query.toLowerCase())).toList();
-
-    return ListView.builder(itemCount: results.length,
-      itemBuilder: (context, index) => NewsCard(news: results[index]),);
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
-  }
-
-}
 // CATEGORY BUTTON WIDGET
 class CategoryButton extends StatelessWidget {
   final String category;

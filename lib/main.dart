@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_application/controller/search_controller.dart';
 import 'package:news_application/home_page.dart';
 import 'package:news_application/controller/theme_controller.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       themeController.isDarkMode.value
           ? ThemeMode.dark
           : ThemeMode.light,
+        // Get.lazyPut(()=>NewsSearchController()),
       home: HomePage(),
     ));
   }

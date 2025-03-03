@@ -1,28 +1,43 @@
 import 'package:get/get.dart';
 import 'package:news_application/model/news_model.dart';
-import 'package:news_application/services/news_services.dart';
+// import '../model/news_model.dart';
+import '../services/news_services.dart';
 
-class NewsController extends GetxController{
-  var newsList = <NewsModel>[].obs;
+class NewsController extends GetxController {
   var isLoading = false.obs;
-  var selectedCategory='general'.obs;
+  var selectedCategory = "general".obs;
+  var newsList = <NewsModel>[].obs;
+  var searchResults = <NewsModel>[].obs;
 
-  @override
-  void onInit(){
-    fetchNewsByCategory(selectedCategory.value);
-    super.onInit();
-  }
-
+  // Fetch news by category
   Future<void> fetchNewsByCategory(String category) async {
-    try{
+    try {
       isLoading(true);
-      selectedCategory.value=category;
+      selectedCategory.value = category;
       var news = await NewsService.fetchNews(category);
       newsList.assignAll(news);
-    }catch(e){
-      print("Error:$e");
-    }finally{
+    } catch (e) {
+      print("Error: $e");
+    } finally {
       isLoading(false);
     }
   }
+
+  // Fetch news by search query
+  // Future<void> fetchNewsSearch(String query) async {
+  //   try {
+  //     isLoading(true);
+  //     var news = await NewsService.searchNews(query);
+  //     searchResults.assignAll(news);
+  //   } catch (e) {
+  //     print("Error: $e");
+  //   } finally {
+  //     isLoading(false);
+  //   }
+  // }
+  //
+  // // Clear search results
+  // void clearSearchResults() {
+  //   searchResults.clear();
+  // }
 }
