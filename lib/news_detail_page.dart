@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final news = Get.arguments; // Getting news data
+    final Map<String, dynamic> news = Get.arguments; // Getting news data
 
     // Function to open the news URL in the browser
     void _launchURL() async {
       final Uri url = Uri.parse(news['url']);
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      } else {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         Get.snackbar("Error", "Could not open the link",
             snackPosition: SnackPosition.BOTTOM);
       }
@@ -20,12 +19,13 @@ class NewsDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(news['source']),
+        backgroundColor: Colors.blue,
+        title: Text(news['source'] ?? 'Unknown Source'),
         actions: [
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
-              // Implement sharing functionality here (Optional)
+              Share.share("${news['title']} - Read more at ${news['url']}");
             },
           ),
         ],
@@ -37,23 +37,35 @@ class NewsDetailPage extends StatelessWidget {
           children: [
             // News Image
             news['imageUrl'] != null
-                ? Image.network(news['imageUrl'], fit: BoxFit.cover)
+                ? Image.network(news['imageUrl'], fit: BoxFit.contain)
                 : SizedBox(),
 
             SizedBox(height: 10),
 
             // News Title
             Text(
-              news['title'],
+              news['title'] ?? 'No Title',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             SizedBox(height: 10),
 
-            // Published Date
-            Text(
-              news['publishedAt'],
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+            // Published Date & Read More Button
+            Row(
+              children: [
+                Text(
+                  news['publishedAt'] ?? '',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Spacer(),
+                TextButton(
+                  onPressed: _launchURL,
+                  child: Text(
+                    "Read More",
+                    style: TextStyle(fontSize: 16, color: Colors.blue),
+                  ),
+                ),
+              ],
             ),
 
             SizedBox(height: 10),
@@ -73,15 +85,6 @@ class NewsDetailPage extends StatelessWidget {
             ),
 
             SizedBox(height: 20),
-
-            // Read More Button
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: _launchURL,
-                child: Text("Read More", style: TextStyle(fontSize: 16, color: Colors.blue)),
-              ),
-            ),
           ],
         ),
       ),

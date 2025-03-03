@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_application/controller/theme_controller.dart';
 import 'package:news_application/model/news_model.dart';
 import 'package:news_application/news_detail_page.dart';
 import 'package:news_application/reading_history_page.dart';
@@ -56,7 +57,7 @@ class HomePage extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            if (isSelected) // ✅ Show icon only if selected
+                            if (isSelected) //  Show icon only if selected
                               Icon(Icons.check_circle, color: Colors.white, size: 18),
                             if (isSelected) SizedBox(width: 5),
                             SizedBox(width: 5,),
@@ -92,6 +93,8 @@ class HomePage extends StatelessWidget {
 }
 // DRAWER MENU
 Widget _buildDrawer(BuildContext context) {
+  final ThemeController themeController = Get.find();
+
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -102,12 +105,18 @@ Widget _buildDrawer(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("News App", style: TextStyle(color: Colors.white,
+              Text(
+                "News App",
+                style: TextStyle(
+                  color: Colors.white,
                   fontSize: 22,
-                  fontWeight: FontWeight.bold),),
-              Text("Stay informed",
-                style: TextStyle(color: Colors.white70, fontSize: 14,),),
-
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "Stay informed",
+                style: TextStyle(color: Colors.white70, fontSize: 14),
+              ),
             ],
           ),
         ),
@@ -118,15 +127,24 @@ Widget _buildDrawer(BuildContext context) {
           // Get.to(() => ReadingHistoryPage());
         }),
         Divider(),
-        ListTile(
-          leading: Icon(Icons.sunny),
+        Obx(() => ListTile(
+          leading: Icon(
+            themeController.isDarkMode.value
+                ? Icons.dark_mode
+                : Icons.light_mode,
+            color: themeController.isDarkMode.value ? Colors.white : Colors.black,
+          ),
           title: Text("Dark Mode"),
-
-        )
+          onTap: () {
+            themeController.toggleTheme();
+            Get.back(); // Close drawer
+          },
+        )),
       ],
     ),
   );
 }
+
 // Drawer Item Widget
 Widget _drawerItem(IconData icon, String title, VoidCallback onTap) {
   return ListTile(
@@ -188,13 +206,13 @@ class CategoryButton extends StatelessWidget {
 class NewsCard extends StatelessWidget {
   final NewsModel news;
 
-  NewsCard({required this.news});
+  const NewsCard({required this.news});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Get.to(()=> NewsDetailPage(news : news));
+        Get.to(() => NewsDetailPage(), arguments: news);
       },
       child: Card(
         margin: EdgeInsets.all(10),
