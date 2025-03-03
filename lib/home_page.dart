@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_application/controller/theme_controller.dart';
@@ -10,6 +9,7 @@ import 'controller/category_controller.dart';
 
 class HomePage extends StatelessWidget {
   final NewsController newsController = Get.put(NewsController());
+  final ThemeController themeController = Get.find();
   final TextEditingController searchController = TextEditingController();
 
   // HomePage({super.key});
@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text("News App"),
-          backgroundColor: Colors.blue,
+          backgroundColor: themeController.isDarkMode.value ? Colors.black : Colors.blue,
           actions: [
             IconButton(
                 onPressed: () {
@@ -100,7 +100,8 @@ Widget _buildDrawer(BuildContext context) {
       padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
-          decoration: BoxDecoration(color: Colors.deepPurple),
+          decoration: BoxDecoration(
+            color: themeController.isDarkMode.value ? Colors.black : Colors.deepPurple,),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -129,17 +130,17 @@ Widget _buildDrawer(BuildContext context) {
         Divider(),
         Obx(() => ListTile(
           leading: Icon(
-            themeController.isDarkMode.value
-                ? Icons.dark_mode
-                : Icons.light_mode,
-            color: themeController.isDarkMode.value ? Colors.white : Colors.black,
+            themeController.isDarkMode.value ? Icons.dark_mode : Icons.light_mode,
+            color: themeController.isDarkMode.value ? Colors.yellow : Colors.black,
           ),
-          title: Text("Dark Mode"),
-          onTap: () {
-            themeController.toggleTheme();
-            Get.back(); // Close drawer
-          },
-        )),
+          title: Text(themeController.isDarkMode.value ? "Light Mode" : "Dark Mode"),
+          trailing: Switch(
+              value: themeController.isDarkMode.value,
+              onChanged: (value){
+                themeController.toggleTheme();
+              }),
+
+        ),),
       ],
     ),
   );

@@ -2,30 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:news_application/model/news_model.dart'; // Import the model
 
 class NewsDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> news = Get.arguments; // Getting news data
+    final NewsModel news = Get.arguments as NewsModel; // Cast to NewsModel
 
     // Function to open the news URL in the browser
-    void _launchURL() async {
-      final Uri url = Uri.parse(news['url']);
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-        Get.snackbar("Error", "Could not open the link",
-            snackPosition: SnackPosition.BOTTOM);
+    void _launchURL(String url) async {
+      try {
+        final Uri uri = Uri.parse(url);
+
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } else {
+          debugPrint("Could not launch $url");
+          Get.snackbar("Error", "Could not open the link",
+              snackPosition: SnackPosition.BOTTOM);
+        }
+      } catch (e) {
+        debugPrint("Error launching URL: $e");
+        Get.snackbar("Error", "Invalid URL", snackPosition: SnackPosition.BOTTOM);
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text(news['source'] ?? 'Unknown Source'),
+        title: Text(news.source),
         actions: [
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
-              Share.share("${news['title']} - Read more at ${news['url']}");
+              Share.share("${news.title} - Read more at ${news.url}");
             },
           ),
         ],
@@ -36,34 +46,31 @@ class NewsDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // News Image
-            news['imageUrl'] != null
-                ? Image.network(news['imageUrl'], fit: BoxFit.contain)
+            news.imageUrl != null
+                ? Image.network(news.imageUrl, fit: BoxFit.contain)
                 : SizedBox(),
 
             SizedBox(height: 10),
 
             // News Title
             Text(
-              news['title'] ?? 'No Title',
+              news.title,
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             SizedBox(height: 10),
 
-            // Published Date & Read More Button
+            // Published Date
             Row(
               children: [
                 Text(
-                  news['publishedAt'] ?? '',
+                  news.publishedAt,
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 Spacer(),
                 TextButton(
-                  onPressed: _launchURL,
-                  child: Text(
-                    "Read More",
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
-                  ),
+                  onPressed: ()=> _launchURL(news.url),
+                  child: Text("Read More", style: TextStyle(fontSize: 16, color: Colors.blue)),
                 ),
               ],
             ),
@@ -72,7 +79,7 @@ class NewsDetailPage extends StatelessWidget {
 
             // News Description
             Text(
-              news['description'] ?? 'No description available',
+              news.description ?? 'No description available',
               style: TextStyle(fontSize: 16),
             ),
 
@@ -80,7 +87,7 @@ class NewsDetailPage extends StatelessWidget {
 
             // Full News Content
             Text(
-              news['content'] ?? '',
+              news.content ?? '',
               style: TextStyle(fontSize: 16),
             ),
 

@@ -15,10 +15,13 @@ class MyApp extends StatelessWidget {
 
     return Obx(() => GetMaterialApp(
       title: 'News App',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.light(), // Light Theme
       darkTheme: ThemeData.dark(), // Dark Theme
       themeMode:
-      themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+      themeController.isDarkMode.value
+          ? ThemeMode.dark
+          : ThemeMode.light,
       home: HomePage(),
     ));
   }
