@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_application/controller/search_controller.dart';
 import 'package:news_application/controller/theme_controller.dart';
+import 'package:news_application/date.dart';
 import 'package:news_application/model/news_model.dart';
 // import 'package:news_application/model/news_model.dart';
 // import '../controllers/search_controller.dart';
 import 'package:news_application/news_detail_page.dart';
 import 'package:news_application/reading_history_page.dart';
+import 'package:news_application/search_page.dart';
 
 import 'controller/category_controller.dart';
 
@@ -36,7 +38,7 @@ class HomePage extends StatelessWidget {
             actions: [
               IconButton(
                   onPressed: () {
-                    // Get.to(() => SearchPage());
+                    Get.to(() => SearchPage());
                   },
                   icon: Icon(Icons.search)),
             ]
@@ -98,7 +100,6 @@ class HomePage extends StatelessWidget {
 // DRAWER MENU
 Widget _buildDrawer(BuildContext context) {
   final ThemeController themeController = Get.find();
-
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -158,97 +159,7 @@ Widget _drawerItem(IconData icon, String title, VoidCallback onTap) {
     onTap: onTap,
   );
 }
-// SEARCH DELEGATE FOR SEARCHING NEWS
-// class NewsSearchDelegate extends SearchDelegate {
-//   final NewsController newsController;
-//   NewsSearchDelegate(this.newsController);
-//
-//   @override
-//   List<Widget>? buildActions(BuildContext context) {
-//     return [
-//       IconButton(
-//         icon: Icon(Icons.clear),
-//         onPressed: () {
-//           query = "";
-//           newsController.searchResults.clear(); // ✅ Clears results instead of calling API again
-//         },
-//       ),
-//     ];
-//   }
-//
-//   @override
-//   Widget buildLeading(BuildContext context) {
-//     return IconButton(
-//       icon: Icon(Icons.arrow_back),
-//       onPressed: () => close(context, null),
-//     );
-//   }
-//
-//   @override
-//   Widget buildResults(BuildContext context) {
-//     if (query.isEmpty) {
-//       return Center(child: Text("Start typing to search"));
-//     }
-//
-//     newsController.fetchNewsSearch(query); // ✅ Fetch results once
-//
-//     return GetBuilder<NewsController>( // ✅ GetBuilder ensures UI updates properly
-//       builder: (controller) {
-//         if (controller.isLoading.value) {
-//           return Center(child: CircularProgressIndicator());
-//         }
-//         if (controller.searchResults.isEmpty) {
-//           return Center(child: Text("❌ No results found"));
-//         }
-//
-//         return ListView.builder(
-//           itemCount: controller.searchResults.length,
-//           itemBuilder: (context, index) {
-//             final news = controller.searchResults[index];
-//             return NewsCard(news: news);
-//           },
-//         );
-//       },
-//     );
-//   }
-//
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     if (query.isEmpty) return Center(child: Text("Start typing to search"));
-//
-//     newsController.fetchNewsSearch(query); // ✅ Fetch results dynamically
-//
-//     return GetBuilder<NewsController>(
-//       builder: (controller) {
-//         if (controller.isLoading.value) {
-//           return Center(child: CircularProgressIndicator());
-//         }
-//         if (controller.searchResults.isEmpty) {
-//           return Center(child: Text("No suggestions found"));
-//         }
-//
-//         return ListView.builder(
-//           itemCount: controller.searchResults.length,
-//           itemBuilder: (context, index) {
-//             final news = controller.searchResults[index];
-//             return ListTile(
-//               title: Text(news.title ?? "No Title"),
-//               subtitle: Text(news.source ?? "Unknown Source"),
-//               onTap: () {
-//                 query = news.title!;
-//                 showResults(context);
-//               },
-//             );
-//           },
-//         );
-//       },
-//     );
-//   }
-// }
 
-
-
-// CATEGORY BUTTON WIDGET
 class CategoryButton extends StatelessWidget {
   final String category;
   final NewsController controller;
@@ -298,7 +209,7 @@ class NewsCard extends StatelessWidget {
                       children: [
                         Text(news.source, style: TextStyle(color: Colors.blue),),
                         Text(
-                          news.publishedAt, style: TextStyle(color: Colors.grey),)
+                          formatToISTDate(news.publishedAt), style: TextStyle(color: Colors.grey),)
                       ],
                     )
                   ],

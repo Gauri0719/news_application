@@ -1,37 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_application/date.dart';
 import 'package:news_application/services/database_class.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:news_application/model/news_model.dart'; // Import the model
 
-class NewsDetailPage extends StatelessWidget {
-  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
+class NewsDetailPage extends StatefulWidget {
+  @override
+  _NewsDetailPageState createState() => _NewsDetailPageState();
+}
 
+class _NewsDetailPageState extends State<NewsDetailPage> {
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
+  late NewsModel news;
+
+  @override
+  void initState() {
+    super.initState();
+    news = Get.arguments as NewsModel;
+    _saveNewsToDatabase(news); // Save news only once when page loads
+  }
+
+  void _saveNewsToDatabase(NewsModel news) async {
+    await _dbHelper.insertNews(news);
+    print("News saved to database: ${news.title}");
+  }
 
   @override
   Widget build(BuildContext context) {
-    final NewsModel news = Get.arguments as NewsModel; // Cast to NewsModel
-    // Insert news into database
-    _saveNewsToDatabase(news);
-    // Function to open the news URL in the browser
-    void _launchURL(String url) async {
-      try {
-        final Uri uri = Uri.parse(url);
-
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        } else {
-          debugPrint("Could not launch $url");
-          Get.snackbar("Error", "Could not open the link",
-              snackPosition: SnackPosition.BOTTOM);
-        }
-      } catch (e) {
-        debugPrint("Error launching URL: $e");
-        Get.snackbar("Error", "Invalid URL", snackPosition: SnackPosition.BOTTOM);
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -50,14 +47,12 @@ class NewsDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // News Image
-            news.imageUrl != null
+            news.imageUrl.isNotEmpty
                 ? Image.network(news.imageUrl, fit: BoxFit.contain)
                 : SizedBox(),
 
             SizedBox(height: 10),
 
-            // News Title
             Text(
               news.title,
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -65,16 +60,15 @@ class NewsDetailPage extends StatelessWidget {
 
             SizedBox(height: 10),
 
-            // Published Date
             Row(
               children: [
                 Text(
-                  news.publishedAt,
+                  formatToISTDate(news.publishedAt),
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 Spacer(),
                 TextButton(
-                  onPressed: ()=> _launchURL(news.url),
+                  onPressed: () => _launchURL(news.url),
                   child: Text("Read More", style: TextStyle(fontSize: 16, color: Colors.blue)),
                 ),
               ],
@@ -82,7 +76,6 @@ class NewsDetailPage extends StatelessWidget {
 
             SizedBox(height: 10),
 
-            // News Description
             Text(
               news.description ?? 'No description available',
               style: TextStyle(fontSize: 16),
@@ -90,7 +83,6 @@ class NewsDetailPage extends StatelessWidget {
 
             SizedBox(height: 10),
 
-            // Full News Content
             Text(
               news.content ?? '',
               style: TextStyle(fontSize: 16),
@@ -102,9 +94,20 @@ class NewsDetailPage extends StatelessWidget {
       ),
     );
   }
-  // Save the news to the database
-  void _saveNewsToDatabase(NewsModel news) async {
-    await _dbHelper.insertNews(news);
-    print("News saved to database: ${news.title}");
+
+  void _launchURL(String url) async {
+    try {
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        debugPrint("Could not launch $url");
+        Get.snackbar("Error", "Could not open the link",
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    } catch (e) {
+      debugPrint("Error launching URL: $e");
+      Get.snackbar("Error", "Invalid URL", snackPosition: SnackPosition.BOTTOM);
+    }
   }
 }

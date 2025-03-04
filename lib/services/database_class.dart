@@ -50,8 +50,15 @@ class DatabaseHelper {
   Future<List<NewsModel>> getSavedNews() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(tableName);
+
+    print("Fetching history: ${maps.length} records found"); // Debugging
+    for (var map in maps) {
+      print("DB Record: ${map['title']}"); // Print each record fetched
+    }
+
     return List.generate(maps.length, (i) => NewsModel.fromMap(maps[i]));
   }
+
 
   // Delete all saved news
   Future<void> clearHistory() async {

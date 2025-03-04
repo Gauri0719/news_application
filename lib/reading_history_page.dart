@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_application/date.dart';
 import 'package:news_application/model/news_model.dart';
 import 'package:news_application/services/database_class.dart';
 
@@ -20,10 +21,19 @@ class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
 
   Future<void> _loadHistory() async {
     final history = await _dbHelper.getSavedNews();
+    print("History Loaded: ${history.length} items"); // Debugging
+    if (history.isEmpty) {
+      print("Database is empty!"); // Check if data is missing
+    } else {
+      for (var news in history) {
+        print("Saved News: ${news.title}"); // Print each saved article
+      }
+    }
     setState(() {
-      _history = history.reversed.toList(); // Show latest news on top
+      _history = history.reversed.toList();
     });
   }
+
 
   void _clearHistory() async {
     await _dbHelper.clearHistory();
@@ -99,7 +109,7 @@ class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
                                   fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey),
                             ),
                             Text(
-                              news.publishedAt,
+                              formatToISTDate(news.publishedAt),
                               style: TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           ],
